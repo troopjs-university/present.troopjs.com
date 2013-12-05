@@ -1,0 +1,279 @@
+<div class="slides">
+<section>
+  <h1>Promises/A+<br>
+  </h1>
+  <h2 class="fragment" data-fragment-index="0">Async flow control without callback hell <br>
+  </h2>
+  <div class="fragment" data-fragment-index="1">Mikael Karon &lt;<a href="mailto:mikael.karon@ef.com">mikael.karon@ef.com</a>&gt;<br>EF Labs (Shanghai)</div>
+</section>
+<section>
+  <section>
+	<h2>Ancient history</h2>
+	<p data-fragment-index="0" class="fragment">The term <em>promise</em> was proposed in 1976 by Daniel P. Friedman and David Wise, and Peter Hibbard called it <em>eventual.</em>
+	</p>
+	<p data-fragment-index="1" class="fragment">A somewhat similar concept <em>future</em> was introduced in 1977 in a paper by Henry Baker and Carl Hewitt.</p>
+	<p data-fragment-index="2" class="fragment">The term <em>promise</em> was coined by arbara Liskov and Liuba Shrira in 1988</p>
+	<p>
+	</p>
+	<p data-fragment-index="3" class="fragment">The future and/or promise constructs were first implemented in programming languages such as MultiLisp and Act 1. ca. 1989.</p>
+  </section>
+  <section>
+	<h2>recent history<br>
+	</h2>
+	<dl data-fragment-index="0" class="fragment">
+	  <dt style="margin-top: 1em;">
+		<font color="#ff9900">2008.02.15</font>
+	  </dt>
+	  <dd>The first widespread use of this pattern was with the dojo toolkit deferred object in version 0.9.</dd>
+	</dl>
+	<dl data-fragment-index="1" class="fragment">
+	  <dt style="margin-top: 1em;">
+		<font color="#ff9900">2009.03.24</font>
+	  </dt>
+	  <dd>Common JS Promises API proposal by Kris Zyp</dd>
+	</dl>
+	<dl data-fragment-index="2" class="fragment">
+	  <dt style="margin-top: 1em;">
+		<font color="#ff9900">2011.12.31</font>
+	  </dt>
+	  <dd>jQuery introduced a new concept in version 1.5 called <code>Deferred</code> which is also a derivative implementation of the CommonJS Promises/A proposal.</dd>
+	</dl>
+  </section>
+  <section>
+	<p>But <code>$.Deferred</code> sucked</p>
+	<ul>
+	  <li data-fragment-index="0" class="fragment">Different from dojo, jQuery does not return another promise from the then method. Instead, jQuery provides the <code>pipe</code> method to chain operations together</li>
+	  <li data-fragment-index="1" class="fragment">Misses the sync - async parallel</li>
+	  <li data-fragment-index="2" class="fragment">Does not handle errors (throw)</li>
+	  <li data-fragment-index="3" class="fragment">Not interoperable with other 'thenable'</li>
+	  <li data-fragment-index="4" class="fragment">Only from 1.8 support returning a promise</li>
+	</ul>
+  </section>
+  <section>
+	<p>... so <a href="https://github.com/domenic">Domenic Denicola</a> got angry and <a href="https://gist.github.com/domenic/3889970">wrote</a>
+	  <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/176150/Screenshot_from_2013-12-03_17_29_38.png">
+	</p>
+  </section>
+  <section>
+	<p>...and he made <a href="http://promisesaplus.com/">http://promisesaplus.com/</a>
+	</p>
+	<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/176158/Screenshot_from_2013-12-03_17_29_38.png">
+  </section>
+  <section>
+	<h2>Standards === win</h2>
+	<ul>
+	  <li data-fragment-index="0" class="fragment">&gt;20 implementations of promises based on Promise/A+</li>
+	  <li data-fragment-index="1" class="fragment">version 1.1 of spec is almost ready</li>
+	  <li data-fragment-index="2" class="fragment">several other siblings spec are under development (promise creation, cancellation, progress)</li>
+	  <li data-fragment-index="3" class="fragment">DOMFuture promise library for using promises in DOM API</li>
+
+	</ul>
+  </section>
+</section>
+<section>
+  <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/176244/CALLBACK.png" data-background-size="initial">
+	<h2>What is "callback hell"?</h2>
+	<blockquote style="margin-top: 5em;">Asynchronous JavaScript, or JavaScript that uses callbacks, is hard to get right intuitively.</blockquote>
+  </section>
+  <section>
+	<h2>A short example</h2>
+<pre><code class="javascript">fs.readFile(<span class="string">'test.txt'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> {</span>
+  <span class="keyword">if</span> (err) <span class="keyword">return</span> console.error(err);
+  db.insert({
+  fileName: <span class="string">'test.txt'</span>,
+  fileContent: data
+  }, <span class="function"><span class="keyword">function</span> <span class="params">(err, result)</span> {</span>
+  <span class="keyword">if</span> (err) <span class="keyword">return</span> console.error(err);
+  smtp.send({
+  to: <span class="string">'test@test.com'</span>,
+  body: <span class="string">'This is a test.'</span>
+  }, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> {</span>
+  <span class="keyword">if</span> (err) <span class="keyword">return</span> console.error(err);
+  console.log(<span class="string">"Success email sent."</span>);
+  });
+  });
+  });</code>    </pre>
+
+	<blockquote data-fragment-index="0" class="fragment" style="margin-top: 1em;">See all the instances of <code>function</code> and <code>})</code>? Eek! This is affectionately known as <a href="http://callbackhell.com/">callback hell</a>
+	</blockquote>
+
+  </section>
+  <section>
+	<h2>Fix: Name your functions</h2>
+
+<pre><code class="javascript">fs.readFile(<span class="string">'test.txt'</span>, <span class="function"><span class="keyword">function</span> onReadFile<span class="params">(err, data)</span> {</span>
+  db.insert(..., <span class="function"><span class="keyword">function</span> onInsert<span class="params">(err, result)</span> {</span>
+  smtp.send(..., <span class="function"><span class="keyword">function</span> onSend<span class="params">(err)</span> {</span> ... });
+  });
+  });</code>    </pre>
+
+	<p data-fragment-index="0" class="fragment">As you can see naming functions is super easy and does some nice things to your code:</p>
+
+	<ul>
+	  <li data-fragment-index="1" class="fragment">Makes code easier to read</li>
+	  <li data-fragment-index="2" class="fragment">When exceptions happen you will get stacktraces that reference actual function names instead of "anonymous"</li>
+	  <li data-fragment-index="3" class="fragment">Allows you to keep your code shallow, or not nested deeply, which brings me to my next point:</li>
+	</ul>
+  </section>
+  <section>
+	<h2>Fix: Keep your code shallow</h2>
+
+<pre data-fragment-index="0" class="fragment">
+    <code class="javascript">fs.readFile(<span class="string">'test.txt'</span>, onReadFile);</code>
+</pre>
+
+<pre data-fragment-index="1" class="fragment">
+<code class="javascript">
+    <span class="function">
+        <span class="keyword">function</span> onReadFile<span class="params">(err, data)</span> {</span>
+  <span class="keyword">if</span> (err) <span class="keyword">return</span> console.error(err);
+  db.insert({
+  fileName: <span class="string">'test.txt'</span>,
+  fileContent: data
+  }, onInsert);
+  }</code>
+    </pre>
+
+<pre data-fragment-index="2" class="fragment">
+    <code class="javascript">
+        <span class="function">
+            <span class="keyword">function</span> onInsert<span class="params">(err, result)</span> {</span>
+	  <span class="keyword">if</span> (err) <span class="keyword">return</span> console.error(err);
+	  smtp.send({
+	  to: <span class="string">'test@test.com'</span>,
+	  body: <span class="string">'This is a test.'</span>
+	  }, onSend);
+	  }</code>
+        </pre>
+
+<pre data-fragment-index="3" class="fragment">
+        <code class="javascript">
+            <span class="function">
+                <span class="keyword">function</span> onSend<span class="params">(err)</span> {</span>
+		  <span class="keyword">if</span> (err) <span class="keyword">return</span> console.error(err);
+		  console.log(<span class="string">"Success email sent."</span>);
+		  }</code>
+            </pre>
+  </section>
+</section>
+<section>
+  <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/176102/logo-large.png" data-background-size="initial">
+	<h2>Promises in JavaScript</h2>
+	<blockquote style="margin-top: 5em;">
+	  A Promise represents the pending result of a computation that may not have completed yet.
+	</blockquote>
+  </section>
+  <section data-background-size="initial">
+	<h2>The states of a promise</h2>
+	<ul style="margin-top: 1em;">
+	  <li data-fragment-index="0" class="fragment">Unresolved</li>
+	  <li data-fragment-index="1" class="fragment">Fulfilled</li>
+	  <li data-fragment-index="2" class="fragment">Rejected</li>
+	</ul>
+	<blockquote data-fragment-index="3" class="fragment" style="margin-top: 1em;">
+	  Once in the fulfilled or rejected state, a Promise become immutable--neither its state nor its result (or error/reason) can be modified.
+	</blockquote>
+  </section>
+  <section>
+	<h2>Unresolved</h2>
+	<p>A Promise starts in an <em>unresolved</em> or <em>pending</em> state. For example, the Promise for a computation that hasn't yet completed is in the <em>pending</em> state. At some point the computation will either complete successfully, thus producing a result, or fail, either generating some sort of error or reason why it could not complete.</p>
+  </section>
+  <section>
+	<h2>Fulfilled</h2>
+	<p>If the computation completes successfully, its Promise will transition to the <em>fulfilled</em> state, and all consumers will be notified of the actual result. In other words, their <code>callback</code> will be invoked and passed the result.</p>
+  </section>
+  <section>
+	<h2>Rejected</h2>
+	<p>If the computation fails, its Promise will transition to the <em>rejected</em> state, and all consumers will be notified of the error or reason for the failure.  In other words, their <code>errorback</code> will be invoked and passed the result.</p>
+  </section>
+</section>
+<section>
+  <section>
+	<h2>Promise me this<br>
+	</h2>
+
+<pre><code class="javascript">fs.readFile(<span class="string">'test.txt'</span>).then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+  <span class="keyword">return</span> db.insert({
+  fileName: <span class="string">'test.txt'</span>,
+  fileContent: data
+  });
+  }).then(<span class="function"><span class="keyword">function</span> <span class="params">(result)</span> {</span>
+  <span class="keyword">return</span> smtp.send({
+  to: <span class="string">'test@test.com'</span>,
+  body: <span class="string">'This is a test.'</span>
+  });
+  }).then(<span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+  console.log(<span class="string">"Success email sent."</span>);
+  }, console.error);</code>        </pre>
+
+	<ul style="margin-top: 1em;">
+	  <li data-fragment-index="0" class="fragment">read 'test.txt'</li>
+	  <li data-fragment-index="1" class="fragment">then write contents to database</li>
+	  <li data-fragment-index="2" class="fragment">then send a mail</li>
+	  <li data-fragment-index="3" class="fragment">then console log a message</li>
+	  <li data-fragment-index="4" class="fragment">if <em>any</em> of the above operations fail, <code>console.error</code>
+	  </li>
+	</ul>
+  </section>
+  <section>
+	<h2>Can I haz more?</h2>
+
+<pre><code class="javascript">fs.readFile(<span class="string">'test.txt'</span>).then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+  <span class="keyword">return</span> db.insert({
+  fileName: <span class="string">'test.txt'</span>,
+  fileContent: data
+  });
+  }).then(<span class="function"><span class="keyword">function</span> <span class="params">(result)</span> {</span>
+  <span class="keyword">return</span> smtp.send({
+  to: <span class="string">'test@test.com'</span>,
+  body: <span class="string">'This is a test.'</span>
+  });
+  }).then(<span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+  console.log(<span class="string">"Success email sent."</span>);
+  }).then(<span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+  <span class="keyword">return</span> ajax.request({ url: <span class="string">"/some/path"</span> });
+  }).then(console.info, console.error, console.debug);</code>    </pre>
+
+	<ul style="margin-top: 1em;">
+	  <li data-fragment-index="0" class="fragment">read, insert, send, log, ajax</li>
+	  <li data-fragment-index="1" class="fragment">then <code>console.info</code>, <code>console.error</code>, <code>console.debug</code>
+	  </li>
+	</ul>
+  </section>
+</section>
+<section>
+  <section>
+	<h2>Deferred producers and consumers</h2>
+	<p style="margin-top: 1em;">A producer is responsible for providing the result of the computation, and typically, but not always, will be the same component that created the Deferred.</p>
+	<p>As the name implies, a consumer observes the result of the computation.</p>
+	<p data-fragment-index="0" class="fragment" style="margin-top: 1em;">From the <em>outside</em> consumers can observe the outcome the computation, but not interfere with the computation itself.</p>
+	<p data-fragment-index="1" class="fragment">From the <em>inside</em> the the producer can resolve the promise with the outcome from the computation.</p>
+
+  </section>
+  <section>
+	<h2>Advanced promises</h2>
+	<p>*Your mileage may vary depending on implementation</p>
+	<ul>
+	  <li data-fragment-index="0" class="fragment">forwarding</li>
+	  <li data-fragment-index="1" class="fragment">
+		<code>.join</code> and <code>.all</code>
+	  </li>
+	  <li data-fragment-index="2" class="fragment">
+		<code>.any</code> and <code>.some</code>
+	  </li>
+	  <li data-fragment-index="3" class="fragment">
+		<code>.map</code> and <code>.reduce</code>
+	  </li>
+	  <li data-fragment-index="4" class="fragment">
+		<code>.sequence</code> and <code>.pipeline</code>
+	  </li>
+	  <li data-fragment-index="5" class="fragment">
+		<code>.parallel</code>
+	  </li>
+	</ul>
+  </section>
+</section>
+<section>
+  <h1 style="margin-top: 2em;">Questions?</h1>
+</section>
+</div>
