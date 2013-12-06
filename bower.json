@@ -1,0 +1,18 @@
+{
+  "name": "troopjs-slides",
+  "version": "0.0.1",
+  "homepage": "https://github.com/troopjs/slides",
+  "authors": [
+    "Mikael Karon"
+  ],
+  "description": "Slides for TroopJS",
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

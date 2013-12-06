@@ -1,311 +1,302 @@
-<div class="slides">
+<div class="slides" xmlns="http://www.w3.org/1999/html">
 <section>
-  <h1>ReqUire.js</h1>
+  <h1>Require.js</h1>
   <h2 class="fragment" data-fragment-index="0">Using AMD to fight for the good and against the bad and ugly parts of javascript</h2>
   <div class="fragment" data-fragment-index="1">Mikael Karon &lt;<a href="mailto:mikael.karon@ef.com">mikael.karon@ef.com</a>&gt;<br>EF Labs (Shanghai)</div>
 </section>
+
 <section>
-  <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/43411/good_bad_ugly_final.jpg" data-background-size="initial">
-	<h2>Meet the family</h2>
+  <section data-background-image="good_bad_ugly_final.jpg" data-background-size="initial">
+    <h2>Meet the family</h2>
   </section>
   <section>
-	<h2>The problem</h2>
-	<div class="fragment" data-fragment-index="0">We don't build <i>web pages</i> anymore</div>
-	<div class="fragment" data-fragment-index="1">We build <i>web applications</i>
-	</div>
-	<div>
-	  <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/43412/web-page.jpg" style="width: 269px;">
-	  <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/43413/facebook-newsfeed-2-5218391-1.jpg" style="width: 371px;">
-	</div>
+    <h2>The problem</h2>
+    <div class="fragment" data-fragment-index="0">We don't build <i>web pages</i> anymore</div>
+    <div class="fragment" data-fragment-index="1">We build <i>web applications</i></div>
+    <div>
+      <img src="web-page.jpg" style="width: 269px;">
+      <img src="facebook-newsfeed-2-5218391-1.jpg" style="width: 371px;">
+    </div>
   </section>
 </section>
-<section data-background-size="initial">
+
+<section>
   <h2>The ugly:Manual deps</h2>
-  <div>
-	<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/43448/ugly.jpg" align="left">
-            <pre style="width: 70%;">
-                <code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
-				  &lt;script src="jquery.easing.js"&gt;&lt;/script&gt;
-				  &lt;script src="slideshow.js"&gt;&lt;/script&gt;
-				  ...
-				  &lt;script type="text/javascript"&gt;
-				  var _gaq = _gaq || [];
-				  _gaq.push(['_setAccount', 'UA-12345678-1']);
-				  &lt;/script&gt;</code>
-            </pre>
-  </div>
-  <div style="text-align: left; font-size:18px">
-	<p class="fragment" data-fragment-index="0">We know that JavaScript tags block page rendering</p>
-	<p class="fragment" data-fragment-index="1">Not every JavaScript file is needed when the page first loads</p>
-	<p class="fragment" data-fragment-index="2">Multi-page applications start copying &amp; pasting script tags</p>
-	<p class="fragment" data-fragment-index="3">As the site grows, so does complexity</p>
-	<p class="fragment" data-fragment-index="4">No encapsulation of export of value = namespace pollution</p>
-  </div>
-
-
+  <div style="padding-left: 10%; min-height: 400px">
+    <img src="ugly.jpg" class="absolute-element" style="position: absolute; left: -10%; max-width: inherit; max-height: inherit">
+<pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="jquery.easing.js"&gt;&lt;/script&gt;
+&lt;script src="slideshow.js"&gt;&lt;/script&gt;
+//...
+&lt;script type="text/javascript"&gt;
+  var _gaq = _gaq || [];
+  _gaq.push([<span class="string">"_setAccount"</span>, <span class="string">"UA-12345678-1"</span>]);
+&lt;/script&gt;</code></pre>
+    <ul style="font-size: .55em; margin: inherit; width: 90%; line-height: 1.5em">
+      <li class="fragment" data-fragment-index="0">We know that JavaScript tags block page rendering</li>
+      <li class="fragment" data-fragment-index="1">Not every JavaScript file is needed when the page first loads</li>
+      <li class="fragment" data-fragment-index="2">Multi-page applications start copying &amp; pasting script tags</li>
+      <li class="fragment" data-fragment-index="3">As the site grows, so does complexity</li>
+      <li class="fragment" data-fragment-index="4">No encapsulation of export of value = namespace pollution</li>
+    </ul>
+  </div>'
 </section>
+
 <section>
   <h2>The bad:Inlined closures</h2>
-  <div>
-	<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/43455/bad.jpg" align="left">
-                <pre style="width: 70%;">
-                    <code>(function () {
-					  var $ = this.jQuery;
-					  var slideshow = $('#id').slideme();
+  <div style="padding-left: 10%; min-height: 400px">
+    <img src="bad.jpg" class="absolute-element" style="position: absolute; left: -10%; max-width: inherit; max-height: inherit">
+<pre><code>(function () {
+  var $ = this.jQuery;
+  var slideshow = $(<span class="string">"#id"</span>).slideme();
 
-					  this.myExample = function () {};
-					  }());</code>
-                </pre>
+  this.myExample = function () {};
+}());</code></pre>
+    <ul style="font-size: .55em; margin: inherit; width: 90%; line-height: 1.5em">
+      <li class="fragment" data-fragment-index="0">No globals is a good thing, but how to reach outside closure?</li>
+    </ul>
   </div>
 </section>
+
 <section>
   <h2>The good:AMD</h2>
-  <div>
-	<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/mikaelkaron/images/43456/good.jpg" align="left">
-                    <pre style="width: 70%;">
-                        <code>define(['widget'], function (Widget) {
-						  return Widget.extend({
-						  "method" : function () {
-						  ...
-						  }
-						  });
-						  });</code>
-                    </pre>
-  </div>
-  <div style="text-align: left; font-size:18px">
-	<p class="fragment" data-fragment-index="0">Modules are encapsulated and sandboxed</p>
-	<p class="fragment" data-fragment-index="1">Create and reuse code from different products</p>
-	<p class="fragment" data-fragment-index="2">Structured, clean codebase</p>
-	<p class="fragment" data-fragment-index="3">Async loading, managed dependencies</p>
-	<p class="fragment" data-fragment-index="4">Lazy load modules (stuff not used by the user yet can be loaded in background when needed on demand)</p>
-	<p class="fragment" data-fragment-index="5">Not a technology, but a specification proposal</p>
+  <div style="padding-left: 10%; min-height: 400px">
+    <img src="good.jpg" class="absolute-element" style="position: absolute; left: -10%; max-width: inherit; max-height: inherit">
+<pre><code>define([<span class="string">"widget"</span>], function (Widget) {
+  return Widget.extend({
+    <span class="string">"method"</span> : function () {
+      //...
+    }
+  });
+});</code></pre>
+    <ul style="font-size: .55em; margin: inherit; width: 90%; line-height: 1.5em">
+      <li class="fragment" data-fragment-index="0">Modules are encapsulated and sandboxed</li>
+      <li class="fragment" data-fragment-index="1">Create and reuse code from different products</li>
+      <li class="fragment" data-fragment-index="2">Structured, clean codebase</li>
+      <li class="fragment" data-fragment-index="3">Async loading, managed dependencies</li>
+      <li class="fragment" data-fragment-index="4">Lazy load modules (stuff not used by the user yet can be loaded in background when needed on demand)</li>
+      <li class="fragment" data-fragment-index="5">Not a technology, but a specification proposal</li>
+    </ul>
   </div>
 </section>
+
 <section>
   <section>
-	<h2>define() API</h2>
-	<ul>
-	  <li>Used to define a module</li>
-	  <li>Specifies all module dependencies</li>
-	  <li>Optionally name your module</li>
-	  <li>Export your module interface</li>
-	</ul>
+    <h2>define() API</h2>
+    <ul>
+      <li>Used to define a module</li>
+      <li>Specifies all module dependencies</li>
+      <li>Optionally name your module</li>
+      <li>Export your module interface</li>
+    </ul>
   </section>
   <section>
-	<h2>define() API</h2>
-<pre><code style="font-size: 18px;" class="javascript"><span class="comment">// naming you module is optional, and in fact, you should avoid it</span>
-  <span class="comment">// naming your modules makes your code less portable</span>
-  <span class="comment">// dependencies listed in an array, same rules as require()</span>
-  <span class="comment">// mapped to arguments in the callback</span>
-  define(<span class="string">'name'</span>, [<span class="string">'dependency'</span>, <span class="string">'bar'</span>], <span class="function"><span class="keyword">function</span><span class="params">(dependency, bar)</span> {</span>
+    <h2><code>define()</code> API</h2>
+<pre><code class="javascript"><span class="comment">// naming you module is optional, and in fact, you should avoid it</span>
+<span class="comment">// naming your modules makes your code less portable</span>
+<span class="comment">// dependencies listed in an array, same rules as require()</span>
+<span class="comment">// mapped to arguments in the callback</span>
+define(<span class="string">"name"</span>, [<span class="string">"dependency"</span>, <span class="string">"bar"</span>], <span class="function"><span class="keyword">function</span><span class="params">(dependency, bar)</span> {</span>
   <span class="comment">// Export the interface for our module.</span>
   <span class="keyword">return</span> {
-  win: dependency.win,
-  lose: bar.lose
+    <span class="string">"win"</span>: dependency.win,
+    <span class="string">"lose"</span>: bar.lose
   };
-  });</code>                        </pre>
+});</code></pre>
   </section>
   <section>
-	<h2>dEFINE() API</h2>
-<pre><code style="font-size: 18px;" class="ruby"><span class="identifier">define</span>([<span class="string">'dependency'</span>, <span class="string">'bar'</span>], <span class="identifier">function</span>(<span class="identifier">dependency</span>, <span class="identifier">bar</span>) {
-  <span class="regexp">//</span> <span class="constant">Export</span> <span class="identifier">the</span> <span class="identifier">interface</span> <span class="identifier"><span class="keyword">for</span></span> <span class="identifier">our</span> <span class="class"><span class="keyword">module</span>.</span>
-  <span class="identifier"><span class="keyword">return</span></span> {
-  <span class="identifier">win</span><span class="symbol">:</span> <span class="identifier">dependency</span>.<span class="identifier">win</span>,
-  <span class="identifier">lose</span><span class="symbol">:</span> <span class="identifier">bar</span>.<span class="identifier">lose</span>
-  };
-  });</code>                        </pre>
-  </section>
-  <section>
-	<h2>dEFINE() API</h2>
-<pre><code style="font-size: 18px;" class="javascript">define(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <h2><code>define()</code> API</h2>
+<pre><code class="javascript">define(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
   <span class="comment">// Export the interface for our module.</span>
   <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
-  <span class="comment">//functions can exported to!</span>
+    <span class="comment">//functions can exported to!</span>
   };
-  });</code>                    </pre>
+});</code></pre>
+<pre><code class="javascript">define({
+  <span class="string">"simple"</span>: true,
+});</code></pre>
   </section>
 </section>
+
 <section>
   <section>
-	<h2>rEQUIRE() API</h2>
-	<div>
-	  <ul>
-		<li>Used to load code in a top level JavaScript file</li>
-		<li>An entry point of sorts</li>
-		<li>Used to lazily load code</li>
-	  </ul>
-	</div>
+    <h2><code>require()</code> API</h2>
+    <ul>
+      <li>Used to load code in a top level JavaScript file</li>
+      <li>An entry point of sorts</li>
+      <li>Used to lazily load code</li>
+    </ul>
   </section>
   <section>
-	<h2>rEQUIRE() API</h2>
-<pre><code style="font-size: 18px;" class="javascript"><span class="comment">// foo is an external module</span>
-  <span class="comment">// foo can be a path or an alias to a path using require configuration</span>
-  <span class="comment">// the exports or return of foo will be mapped </span>
-  <span class="comment">// to the corresponding argument.</span>
-  require([<span class="string">'foo'</span>], <span class="function"><span class="keyword">function</span><span class="params">(foo)</span> {</span>
+  <h2><code>require()</code> API</h2>
+<pre><code class="javascript"><span class="comment">// foo is an external module</span>
+<span class="comment">// foo can be a path or an alias to a path using require configuration</span>
+<span class="comment">// the exports or return of foo will be mapped </span>
+<span class="comment">// to the corresponding argument.</span>
+require([<span class="string">"foo"</span>], <span class="function"><span class="keyword">function</span><span class="params">(foo)</span> {</span>
   foo.win()
-  });</code>            </pre>
+});</code></pre>
   </section>
   <section>
-	<h2>rEQUIRE() API</h2>
-<pre><code style="font-size: 18px;" class="javascript"><span class="comment">// Multiple dependencies</span>
-  require([<span class="string">'foo'</span>, <span class="string">'bar'</span>], <span class="function"><span class="keyword">function</span><span class="params">(foo, bar)</span> {</span>
+    <h2><code>require()</code> API</h2>
+<pre><code class="javascript"><span class="comment">// Multiple dependencies</span>
+require([<span class="string">"foo"</span>, <span class="string">"bar"</span>], <span class="function"><span class="keyword">function</span><span class="params">(foo, bar)</span> {</span>
   foo.win();
   bar.lose();
-  });</code>        </pre>
+});</code></pre>
   </section>
   <section>
-	<h2>rEQUIRE() API</h2>
-<pre><code style="font-size: 18px;" class="javascript"><span class="comment">// Dynamic loading of dependencies</span>
-  define([<span class="string">'require'</span>, <span class="string">'jquery'</span>], <span class="function"><span class="keyword">function</span><span class="params">(require, $)</span> {</span>
-  <span class="comment">// lots of awesome code</span>
+    <h2><code>require()</code> API</h2>
+<pre><code class="javascript"><span class="comment">// Dynamic loading of dependencies</span>
+define([<span class="string">"require"</span>, <span class="string">"jquery"</span>], <span class="function"><span class="keyword">function</span><span class="params">(require, $)</span> {</span>
+  <span class="comment">// Lots of awesome code</span>
 
-  $(<span class="string">'#chat-start'</span>).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
-  <span class="comment">// dependencies are paths so this will grab features/chat.js</span>
-  require([<span class="string">'features/chat'</span>], <span class="function"><span class="keyword">function</span><span class="params">(chat)</span> {</span>
-  chat.start();
+  $(<span class="string">"#chat-start"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+    <span class="comment">// Dependencies are paths so this will grab features/chat.js</span>
+    require([<span class="string">"features/chat"</span>], <span class="function"><span class="keyword">function</span><span class="params">(chat)</span> {</span>
+      chat.start();
+    });
   });
-  });
-  <span class="keyword">return</span> <span class="comment">//awesome api;</span>
-  });</code>    </pre>
+  <span class="keyword">return;</span> <span class="comment">//awesome api</span>
+});</code></pre>
   </section>
   <section>
-	<h2>rEQUIRE() API</h2>
-<pre><code style="font-size: 18px;" class="php"><span class="comment">// multiple loaders!</span>
-  <span class="keyword">var</span> reqOne = <span class="keyword">require</span>.config({
-  context: <span class="string">"version1"</span>,
-  baseUrl: <span class="string">"version1"</span>
-  });
+    <h2><code>require()</code> API</h2>
+<pre><code class="javascript"><span class="comment">// multiple loaders!</span>
+<span class="keyword">var</span> reqOne = require.config({
+  <span class="string">"context"</span>: <span class="string">"version1"</span>,
+  <span class="string">"baseUrl"</span>: <span class="string">"base1"</span>
+});
+
+<span class="keyword">var</span> reqTwo = require.config({
+  <span class="string">"context"</span>: <span class="string">"version2"</span>,
+  <span class="string">"baseUrl"</span>: <span class="string">"base2"</span>
+});
 </code></pre>
   </section>
 </section>
+
 <section>
   <section>
-	<h2>require.config() API</h2>
-	<div>
-	  <ul>
-		<li>Configuration of the Require.js Loader<br>
-		</li>
-		<li>Plugin configuration<br>
-		</li>
-		<li>Paths, packages, shims, map and more<br>
-		</li>
-	  </ul>
-	</div>
+    <h2><code>require.config()</code> API</h2>
+    <ul>
+      <li>Configuration of the Require.js Loader</li>
+      <li>Plugin configuration</li>
+      <li>Paths, packages, shims, map and more</li>
+    </ul>
   </section>
   <section>
-	<h2>require.config() API</h2>
-<pre><code style="font-size: 18px;" class="ruby"><span class="identifier"><span class="keyword">require</span></span>.<span class="identifier">config</span>({
-  <span class="constant">baseUrl</span><span class="symbol">:</span> <span class="string">'/js'</span>,
-  <span class="identifier">paths</span><span class="symbol">:</span> {
-  <span class="regexp">//</span> ;-)
-  <span class="string">'underscore'</span><span class="symbol">:</span> <span class="string">'lodash'</span>
+    <h2><code>require.config()</code> API</h2>
+<pre><code class="javascript">require.config({
+  "baseUrl": <span class="string">"/js"</span>
+  "paths": {
+    <span class="comment">//</span> ;-)
+    <span class="string">"underscore"</span>: <span class="string">"lodash"</span>
   }
-  });</code>        </pre>
+});</code></pre>
   </section>
   <section>
-	<h2 style="font-style: normal; font-variant: normal;">REQUIRE.CONFIG() API</h2>
-<pre><code style="font-size: 18px;" class="php"><span class="keyword">require</span>.config({
-  shim: {
-  <span class="string">'backbone'</span>: {
-  <span class="comment">// These script dependencies should be loaded before </span>
-  <span class="comment">// loading backbone.js</span>
-  deps: [<span class="string">'underscore'</span>, <span class="string">'jquery'</span>],
+    <h2><code>require.config()</code> API</h2>
+<pre><code class="javascript">require.config({
+  <span class="string">"shim"</span>: {
+    <span class="string">"backbone"</span>: {
+      <span class="comment">// These script dependencies should be loaded before </span>
+      <span class="comment">// loading backbone.js</span>
+      <span class="string">"deps"</span>: [<span class="string">"underscore"</span>, <span class="string">"jquery"</span>],
 
-  <span class="comment">//Once loaded, use the global 'Backbone' as the</span>
-  <span class="comment">//module value.</span>
-  exports: <span class="string">'Backbone'</span>
+      <span class="comment">//Once loaded, use the global "Backbone" as the module value.</span>
+      <span class="string">"exports"</span>: <span class="string">"Backbone"</span>
+    }
   }
-  }
-  });</code>    </pre>
+});</code></pre>
   </section>
   <section>
-	<h2>require.config() API</h2>
-<pre><code style="font-size: 18px;" class="ruby"><span class="identifier">requirejs</span>.<span class="identifier">config</span>({
-  <span class="identifier"><span class="keymethods">map</span></span><span class="symbol">:</span> {
-  <span class="regexp">//</span> <span class="constant">When</span> <span class="identifier">some</span>/<span class="identifier">newmodule</span> <span class="identifier">requires</span> <span class="identifier">foo</span> <span class="identifier">it</span> <span class="identifier"><span class="keymethods">gets</span></span> <span class="identifier">the</span> <span class="identifier">newer</span> <span class="identifier">version</span>.
-  <span class="string">'some/newmodule'</span><span class="symbol">:</span> {
-  <span class="string">'foo'</span><span class="symbol">:</span> <span class="string">'foo1.2'</span>
-  },
-  <span class="regexp">//</span> <span class="constant">When</span> <span class="identifier">some</span>/<span class="identifier">oldmodule</span> <span class="identifier">requires</span> <span class="identifier">foo</span> <span class="identifier">it</span> <span class="identifier"><span class="keymethods">gets</span></span> <span class="identifier">the</span> <span class="identifier">older</span> <span class="identifier">version</span>.
-  <span class="string">'some/oldmodule'</span><span class="symbol">:</span> {
-  <span class="string">'foo'</span><span class="symbol">:</span> <span class="string">'foo1.0'</span>
+    <h2><code>require.config()</code> API</h2>
+<pre><code class="javascript">require.config({
+  <span class="string">"map"</span>: {
+    <span class="comment">//</span> When some newmodule requires foo it gets the newer version.
+    <span class="string">"some/newmodule"</span>: {
+      <span class="string">"foo"</span>: <span class="string">"foo1.2"</span>
+    },
+
+    <span class="comment">//</span> When some oldmodule requires foo it gets the older version.
+    <span class="string">"some/oldmodule"</span>: {
+      <span class="string">"foo"</span>: <span class="string">"foo1.0"</span>
+    }
   }
-  }
-  });</code></pre>
+});</code></pre>
   </section>
 </section>
+
 <section>
   <section>
-	<h2>Plugins:using</h2>
-	<div>
-	  <ul>
-		<li>Transparent middleware for your modules!</li>
-		<li>Load different kinds of assets. Assets are dependencies too! (CSS, Templates, etc)</li>
-		<li>Can be used to preprocess module contents or load strategies. (CoffeeScript, Non-AMD Scripts)</li>
-		<li>text!, css!, i18n!, cs!, json!, mdown!, jade! &amp; lots more!</li>
-	  </ul>
-	</div>
-
-
-
+    <h2>Plugins:using</h2>
+    <ul>
+      <li>Transparent middleware for your modules!</li>
+      <li>Load different kinds of assets. Assets are dependencies too! (CSS, Templates, etc)</li>
+      <li>Can be used to preprocess module contents or load strategies. (CoffeeScript, Non-AMD Scripts)</li>
+      <li>text!, css!, i18n!, cs!, json!, mdown!, jade! &amp; lots more!</li>
+    </ul>
   </section>
   <section>
-	<h2 style="font-style: normal; font-variant: normal;">PLUGINS:USING</h2>
-<pre><code style="font-size: 18px;" class="javascript"><span class="comment">// the &lt;plugin&gt;!&lt;resource&gt; is the syntax to use a plugin </span>
-  <span class="comment">// plugins are just modules that implement a specific api</span>
-  define([<span class="string">'foo!bar'</span>], <span class="function"><span class="keyword">function</span><span class="params">(bar)</span> {</span>
+    <h2>Plugins:using</h2>
+<pre><code class="javascript"><span class="comment">// the &lt;plugin&gt;!&lt;resource&gt; is the syntax to use a plugin </span>
+<span class="comment">// plugins are just modules that implement a specific api</span>
+define([<span class="string">"foo!bar"</span>], <span class="function"><span class="keyword">function</span><span class="params">(bar)</span> {</span>
   <span class="comment">// Export the interface for our module.</span>
-  });</code>        </pre>
+});</code></pre>
   </section>
   <section>
-	<h2 style="font-style: normal; font-variant: normal;">PLUGINS:USING</h2>
-<pre><code style="font-size: 18px;" class="javascript">define([<span class="string">'cs!module.coffee'</span>], <span class="function"><span class="keyword">function</span><span class="params">(module)</span> {</span>
+    <h2>Plugins:using</h2>
+<pre><code class="javascript">define([<span class="string">"cs!module.coffee"</span>], <span class="function"><span class="keyword">function</span><span class="params">(module)</span> {</span>
   <span class="comment">// module was compiled for me!</span>
-  });</code>    </pre>
+});</code></pre>
   </section>
   <section>
-	<h2 style="font-style: normal; font-variant: normal;">PLUGINS:USING</h2>
-<pre><code style="font-size: 18px;" class="javascript">define([
-  <span class="string">'text!mytemplate.handlebars'</span>,
-  <span class="string">'handlebars'</span>
+	<h2>Plugins:using</h2>
+<pre><code class="javascript">define([
+  <span class="string">"text!mytemplate.handlebars"</span>,
+  <span class="string">"handlebars"</span>
   ], <span class="function"><span class="keyword">function</span><span class="params">(template, handlebars)</span>{</span>
   <span class="comment">// template is just a string</span>
   <span class="keyword">return</span> handlebars.compile(template);
-  });</code></pre>
+});</code></pre>
   </section>
 </section>
+
 <section>
   <section>
-	<h2 style="font-style: normal; font-variant: normal;">PLUGINS:creating</h2>
-	<div>
-	  <ul>
-		<li>We can significantly reduce boilerplate, and further separate our concerns with plugins!<br>
-		</li>
-		<li>The plugins will actually write to file in the build, this means your whole application could be a single request<br>
-		</li>
-	  </ul>
-	</div>
+    <h2>Plugins:creating</h2>
+    <ul>
+      <li>We can significantly reduce boilerplate, and further separate our concerns with plugins!</li>
+      <li>The plugins will actually write to file in the build, this means your whole application could be a single request</li>
+    </ul>
   </section>
   <section>
-	<h2>PLUGINS:creating</h2>
-	<h3>Plugins are just modules</h3>
-	<h4>That honor a spicified API</h4>
-<pre><code style="font-size: 18px;" class="javascript">write: <span class="function"><span class="keyword">function</span> <span class="params">(pluginName, name, write)</span> {</span> ... },
-  load: <span class="function"><span class="keyword">function</span> <span class="params">(name, parentRequire, load, config)</span> {</span>
+    <h2>Plugins:creating</h2>
+    <h3>Plugins are just modules</h3>
+    <h4>That honor a specified API</h4>
+<pre><code class="javascript"><span class="comment">// Writes plugin during optimization
+<span class="string">"write"</span>: <span class="function"><span class="keyword">function</span> <span class="params">(pluginName, name, write)</span> {</span>
+  <span class="comment">//...
+},
+
+<span class="comment">// Load and process
+<span class="string">"load": <span class="function"><span class="keyword">function</span> <span class="params">(name, parentRequire, load, config)</span> {</span>
   <span class="comment">// Require the intended dependency</span>
   parentRequire([name], <span class="function"><span class="keyword">function</span> <span class="params">(val)</span> {</span>
-  <span class="comment">// Add extra functionality</span>
-  val.extra = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span> alert(<span class="string">'extra!'</span>); };
-  <span class="comment">// resolve the dependency manually</span>
-  load(val);
+    <span class="comment">// Add extra functionality</span>
+    val.extra = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span> alert(<span class="string">"extra!"</span>); };
+    <span class="comment">// Resolve the dependency manually</span>
+    load(val);
   });
-  }</code></pre>
-<pre><code style="font-size: 18px;" class="javascript">require([<span class="string">'plugin!module'</span>], <span class="function"><span class="keyword">function</span> <span class="params">(module)</span> {</span>
-  module.extra(); <span class="comment">// alerts 'extra!'</span>
-  });</code>    </pre>
+}</code></pre>
+<pre><code class="javascript">require([<span class="string">"plugin!module"</span>], <span class="function"><span class="keyword">function</span> <span class="params">(module)</span> {</span>
+  module.extra(); <span class="comment">// alerts "extra!"</span>
+});</code>    </pre>
   </section>
 </section>
+
 <section>
   <h1 style="margin-top: 2em;">Questions?</h1>
 </section>
