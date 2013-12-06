@@ -22,8 +22,8 @@
 
 <section>
   <h2>The ugly:Manual deps</h2>
+  <img src="ugly.jpg" class="absolute-element" style="position: absolute; left: -10%; top: -5%; max-width: inherit; max-height: inherit; width: 200px">
   <div style="padding-left: 10%; min-height: 400px">
-    <img src="ugly.jpg" class="absolute-element" style="position: absolute; left: -10%; max-width: inherit; max-height: inherit">
 <pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
 &lt;script src="jquery.easing.js"&gt;&lt;/script&gt;
 &lt;script src="slideshow.js"&gt;&lt;/script&gt;
@@ -39,13 +39,13 @@
       <li class="fragment" data-fragment-index="3">As the site grows, so does complexity</li>
       <li class="fragment" data-fragment-index="4">No encapsulation of export of value = namespace pollution</li>
     </ul>
-  </div>'
+  </div>
 </section>
 
 <section>
   <h2>The bad:Inlined closures</h2>
+  <img src="bad.jpg" class="absolute-element" style="position: absolute; left: -10%; top: -5%; max-width: inherit; max-height: inherit; width: 200px">
   <div style="padding-left: 10%; min-height: 400px">
-    <img src="bad.jpg" class="absolute-element" style="position: absolute; left: -10%; max-width: inherit; max-height: inherit">
 <pre><code>(function () {
   var $ = this.jQuery;
   var slideshow = $(<span class="string">"#id"</span>).slideme();
@@ -60,8 +60,8 @@
 
 <section>
   <h2>The good:AMD</h2>
+  <img src="good.jpg" class="absolute-element" style="position: absolute; left: -10%; top: -5%; max-width: inherit; max-height: inherit; width: 200px">
   <div style="padding-left: 10%; min-height: 400px">
-    <img src="good.jpg" class="absolute-element" style="position: absolute; left: -10%; max-width: inherit; max-height: inherit">
 <pre><code>define([<span class="string">"widget"</span>], function (Widget) {
   return Widget.extend({
     <span class="string">"method"</span> : function () {
@@ -276,13 +276,13 @@ define([<span class="string">"foo!bar"</span>], <span class="function"><span cla
     <h2>Plugins:creating</h2>
     <h3>Plugins are just modules</h3>
     <h4>That honor a specified API</h4>
-<pre><code class="javascript"><span class="comment">// Writes plugin during optimization
+<pre><code class="javascript"><span class="comment">// Writes plugin during optimization</span>
 <span class="string">"write"</span>: <span class="function"><span class="keyword">function</span> <span class="params">(pluginName, name, write)</span> {</span>
-  <span class="comment">//...
+  <span class="comment">//...</span>
 },
 
-<span class="comment">// Load and process
-<span class="string">"load": <span class="function"><span class="keyword">function</span> <span class="params">(name, parentRequire, load, config)</span> {</span>
+<span class="comment">// Load and process</span>
+<span class="string">"load"</span>: <span class="function"><span class="keyword">function</span> <span class="params">(name, parentRequire, load, config)</span> {</span>
   <span class="comment">// Require the intended dependency</span>
   parentRequire([name], <span class="function"><span class="keyword">function</span> <span class="params">(val)</span> {</span>
     <span class="comment">// Add extra functionality</span>
