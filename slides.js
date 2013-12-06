@@ -29,7 +29,7 @@ require.config({
 		}
 	},
 
-	"deps": [ "jquery", "revealjs", "css!revealjs/css/reveal.min", "css!revealjs/css/theme/default" ],
+	"deps": [ "jquery", "revealjs", "css!revealjs/css/reveal.min", "css!revealjs/css/theme/default", "css!revealjs/lib/css/zenburn" ],
 
 	"callback": function (jQuery, reveal) {
 		jQuery(function ($) {
