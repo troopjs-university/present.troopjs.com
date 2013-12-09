@@ -26,7 +26,7 @@ define([
 
 	return Widget.extend(function ($element, name, config) {
 		this[CONFIG] = config;
-	}, API, HtmlLoader, {
+	}, API, {
 		"sig/initialize": function () {
 			revealjs.initialize(this[CONFIG]);
 		},
@@ -95,5 +95,5 @@ define([
 		"dom/reveal/togglePause": function () {
 			this.togglePause();
 		}
-	});
+	}, HtmlLoader);
 });
