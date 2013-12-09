@@ -25,7 +25,11 @@ require.config({
 		"location": "bower_components/troopjs",
 		"main": "maxi"
 	}, {
-		"name": "troopjs-reveal",
+		"name": "troopjs-contrib-revealjs",
+		"location": "bower_components/troopjs-contrib-revealjs",
+		"main": "main"
+	}, {
+		"name": "troopjs-slides",
 		"location": "."
 	}],
 
@@ -38,11 +42,11 @@ require.config({
 	"map": {
 		"*":{
 			"css": "require-css",
-			"widgets": "troopjs-reveal/widgets"
+			"widgets": "troopjs-slides/widgets"
 		}
 	},
 
-	"deps": [ "require", "jquery", "troopjs", "when/monitor/console" ],
+	"deps": [ "require", "jquery", "troopjs" ],
 
 	"callback": function (contextRequire, jQuery) {
 		contextRequire([ "troopjs-browser/application/widget", "troopjs-browser/ajax/service" ], function (Application, AjaxService) {

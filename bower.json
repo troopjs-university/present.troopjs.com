@@ -14,5 +14,14 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jquery": "~2",
+    "when": "~2.7",
+    "poly": "~0.6",
+    "troopjs-contrib-revealjs": "~0"
+  },
+  "devDependencies": {
+    "requirejs": "~2.1"
+  }
 }
