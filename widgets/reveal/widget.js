@@ -1,11 +1,12 @@
 define([
 	"troopjs-browser/component/widget",
+	"./api",
 	"./loader/html",
 	"jquery",
 	"revealjs",
 	"css!revealjs/css/reveal.min",
 	"css!revealjs/css/theme/default"
-], function (Widget, HtmlLoader, $, revealjs) {
+], function (Widget, API, HtmlLoader, $, revealjs) {
 
 	var CONFIG = "_config";
 
@@ -25,7 +26,7 @@ define([
 
 	return Widget.extend(function ($element, name, config) {
 		this[CONFIG] = config;
-	}, HtmlLoader, {
+	}, API, HtmlLoader, {
 		"sig/initialize": function () {
 			revealjs.initialize(this[CONFIG]);
 		},
@@ -57,6 +58,42 @@ define([
 		"dom/fragmentshown": onFragment,
 		"dom/fragmenthidden": onFragment,
 		"dom/overviewshown": onOverview,
-		"dom/overviewhidden": onOverview
+		"dom/overviewhidden": onOverview,
+
+		"dom/reveal/slide": function ($event, indexh, indexv, indexf) {
+			this.slide(indexh, indexv, indexf);
+		},
+
+		"dom/reveal/left": function () {
+			this.left();
+		},
+
+		"dom/reveal/right": function () {
+			this.right();
+		},
+
+		"dom/reveal/up": function () {
+			this.up();
+		},
+
+		"dom/reveal/down": function () {
+			this.down();
+		},
+
+		"dom/reveal/prev": function () {
+			this.prev();
+		},
+
+		"dom/reveal/next": function () {
+			this.next();
+		},
+
+		"dom/reveal/toggleOverview": function () {
+			this.toggleOverview();
+		},
+
+		"dom/reveal/togglePause": function () {
+			this.togglePause();
+		}
 	});
 });
