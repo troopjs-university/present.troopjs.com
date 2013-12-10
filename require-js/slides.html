@@ -24,7 +24,7 @@
   <h2>The ugly:Manual deps</h2>
   <img src="ugly.jpg" class="absolute-element" style="position: absolute; left: -10%; top: -5%; max-width: inherit; max-height: inherit; width: 200px">
   <div style="padding-left: 10%; min-height: 400px">
-<pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
+<pre><code class="javascript" data-trim>&lt;script src="jquery.js"&gt;&lt;/script&gt;
 &lt;script src="jquery.easing.js"&gt;&lt;/script&gt;
 &lt;script src="slideshow.js"&gt;&lt;/script&gt;
 //...
@@ -46,7 +46,7 @@
   <h2>The bad:Inlined closures</h2>
   <img src="bad.jpg" class="absolute-element" style="position: absolute; left: -10%; top: -5%; max-width: inherit; max-height: inherit; width: 200px">
   <div style="padding-left: 10%; min-height: 400px">
-<pre><code>(function () {
+<pre><code class="javascript" data-trim>(function () {
   var $ = this.jQuery;
   var slideshow = $(<span class="string">"#id"</span>).slideme();
 
@@ -62,7 +62,7 @@
   <h2>The good:AMD</h2>
   <img src="good.jpg" class="absolute-element" style="position: absolute; left: -10%; top: -5%; max-width: inherit; max-height: inherit; width: 200px">
   <div style="padding-left: 10%; min-height: 400px">
-<pre><code>define([<span class="string">"widget"</span>], function (Widget) {
+<pre><code class="javascript" data-trim>define([<span class="string">"widget"</span>], function (Widget) {
   return Widget.extend({
     <span class="string">"method"</span> : function () {
       //...
@@ -92,7 +92,7 @@
   </section>
   <section>
     <h2><code>define()</code> API</h2>
-<pre><code class="javascript"><span class="comment">// naming you module is optional, and in fact, you should avoid it</span>
+<pre><code class="javascript" data-trim><span class="comment">// naming you module is optional, and in fact, you should avoid it</span>
 <span class="comment">// naming your modules makes your code less portable</span>
 <span class="comment">// dependencies listed in an array, same rules as require()</span>
 <span class="comment">// mapped to arguments in the callback</span>
@@ -106,13 +106,13 @@ define(<span class="string">"name"</span>, [<span class="string">"dependency"</s
   </section>
   <section>
     <h2><code>define()</code> API</h2>
-<pre><code class="javascript">define(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+<pre><code class="javascript" data-trim>define(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
   <span class="comment">// Export the interface for our module.</span>
   <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
     <span class="comment">//functions can exported to!</span>
   };
 });</code></pre>
-<pre><code class="javascript">define({
+<pre><code class="javascript" data-trim>define({
   <span class="string">"simple"</span>: true,
 });</code></pre>
   </section>
@@ -129,7 +129,7 @@ define(<span class="string">"name"</span>, [<span class="string">"dependency"</s
   </section>
   <section>
   <h2><code>require()</code> API</h2>
-<pre><code class="javascript"><span class="comment">// foo is an external module</span>
+<pre><code class="javascript" data-trim><span class="comment">// foo is an external module</span>
 <span class="comment">// foo can be a path or an alias to a path using require configuration</span>
 <span class="comment">// the exports or return of foo will be mapped </span>
 <span class="comment">// to the corresponding argument.</span>
@@ -139,7 +139,7 @@ require([<span class="string">"foo"</span>], <span class="function"><span class=
   </section>
   <section>
     <h2><code>require()</code> API</h2>
-<pre><code class="javascript"><span class="comment">// Multiple dependencies</span>
+<pre><code class="javascript" data-trim><span class="comment">// Multiple dependencies</span>
 require([<span class="string">"foo"</span>, <span class="string">"bar"</span>], <span class="function"><span class="keyword">function</span><span class="params">(foo, bar)</span> {</span>
   foo.win();
   bar.lose();
@@ -147,7 +147,7 @@ require([<span class="string">"foo"</span>, <span class="string">"bar"</span>], 
   </section>
   <section>
     <h2><code>require()</code> API</h2>
-<pre><code class="javascript"><span class="comment">// Dynamic loading of dependencies</span>
+<pre><code class="javascript" data-trim><span class="comment">// Dynamic loading of dependencies</span>
 define([<span class="string">"require"</span>, <span class="string">"jquery"</span>], <span class="function"><span class="keyword">function</span><span class="params">(require, $)</span> {</span>
   <span class="comment">// Lots of awesome code</span>
 
@@ -162,7 +162,7 @@ define([<span class="string">"require"</span>, <span class="string">"jquery"</sp
   </section>
   <section>
     <h2><code>require()</code> API</h2>
-<pre><code class="javascript"><span class="comment">// multiple loaders!</span>
+<pre><code class="javascript" data-trim><span class="comment">// multiple loaders!</span>
 <span class="keyword">var</span> reqOne = require.config({
   <span class="string">"context"</span>: <span class="string">"version1"</span>,
   <span class="string">"baseUrl"</span>: <span class="string">"base1"</span>
@@ -187,7 +187,7 @@ define([<span class="string">"require"</span>, <span class="string">"jquery"</sp
   </section>
   <section>
     <h2><code>require.config()</code> API</h2>
-<pre><code class="javascript">require.config({
+<pre><code class="javascript" data-trim>require.config({
   "baseUrl": <span class="string">"/js"</span>
   "paths": {
     <span class="comment">//</span> ;-)
@@ -197,7 +197,7 @@ define([<span class="string">"require"</span>, <span class="string">"jquery"</sp
   </section>
   <section>
     <h2><code>require.config()</code> API</h2>
-<pre><code class="javascript">require.config({
+<pre><code class="javascript" data-trim>require.config({
   <span class="string">"shim"</span>: {
     <span class="string">"backbone"</span>: {
       <span class="comment">// These script dependencies should be loaded before </span>
@@ -212,7 +212,7 @@ define([<span class="string">"require"</span>, <span class="string">"jquery"</sp
   </section>
   <section>
     <h2><code>require.config()</code> API</h2>
-<pre><code class="javascript">require.config({
+<pre><code class="javascript" data-trim>require.config({
   <span class="string">"map"</span>: {
     <span class="comment">//</span> When some newmodule requires foo it gets the newer version.
     <span class="string">"some/newmodule"</span>: {
@@ -240,7 +240,7 @@ define([<span class="string">"require"</span>, <span class="string">"jquery"</sp
   </section>
   <section>
     <h2>Plugins:using</h2>
-<pre><code class="javascript"><span class="comment">// the &lt;plugin&gt;!&lt;resource&gt; is the syntax to use a plugin </span>
+<pre><code class="javascript" data-trim><span class="comment">// the &lt;plugin&gt;!&lt;resource&gt; is the syntax to use a plugin </span>
 <span class="comment">// plugins are just modules that implement a specific api</span>
 define([<span class="string">"foo!bar"</span>], <span class="function"><span class="keyword">function</span><span class="params">(bar)</span> {</span>
   <span class="comment">// Export the interface for our module.</span>
@@ -248,13 +248,13 @@ define([<span class="string">"foo!bar"</span>], <span class="function"><span cla
   </section>
   <section>
     <h2>Plugins:using</h2>
-<pre><code class="javascript">define([<span class="string">"cs!module.coffee"</span>], <span class="function"><span class="keyword">function</span><span class="params">(module)</span> {</span>
+<pre><code class="javascript" data-trim>define([<span class="string">"cs!module.coffee"</span>], <span class="function"><span class="keyword">function</span><span class="params">(module)</span> {</span>
   <span class="comment">// module was compiled for me!</span>
 });</code></pre>
   </section>
   <section>
 	<h2>Plugins:using</h2>
-<pre><code class="javascript">define([
+<pre><code class="javascript" data-trim>define([
   <span class="string">"text!mytemplate.handlebars"</span>,
   <span class="string">"handlebars"</span>
 ], <span class="function"><span class="keyword">function</span><span class="params">(template, handlebars)</span>{</span>
@@ -276,7 +276,7 @@ define([<span class="string">"foo!bar"</span>], <span class="function"><span cla
     <h2>Plugins:creating</h2>
     <h3>Plugins are just modules</h3>
     <h4>That honor a specified API</h4>
-<pre><code class="javascript"><span class="comment">// Writes plugin during optimization</span>
+<pre><code class="javascript" data-trim><span class="comment">// Writes plugin during optimization</span>
 <span class="string">"write"</span>: <span class="function"><span class="keyword">function</span> <span class="params">(pluginName, name, write)</span> {</span>
   <span class="comment">//...</span>
 },
@@ -291,7 +291,7 @@ define([<span class="string">"foo!bar"</span>], <span class="function"><span cla
     load(val);
   });
 }</code></pre>
-<pre><code class="javascript">require([<span class="string">"plugin!module"</span>], <span class="function"><span class="keyword">function</span> <span class="params">(module)</span> {</span>
+<pre><code class="javascript" data-trim>require([<span class="string">"plugin!module"</span>], <span class="function"><span class="keyword">function</span> <span class="params">(module)</span> {</span>
   module.extra(); <span class="comment">// alerts "extra!"</span>
 });</code>    </pre>
   </section>
