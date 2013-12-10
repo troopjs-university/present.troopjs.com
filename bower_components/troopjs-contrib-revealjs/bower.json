@@ -1,0 +1,22 @@
+{
+  "name": "troopjs-contrib-revealjs",
+  "version": "0.0.0",
+  "homepage": "https://github.com/troopjs/troopjs-contrib-revealjs",
+  "authors": [
+    "Mikael Karon"
+  ],
+  "main": "main.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "troopjs": "~2",
+    "require-css": "~0.1",
+    "reveal.js": "~2.6"
+  }
+}

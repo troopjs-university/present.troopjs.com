@@ -1,0 +1,31 @@
+{
+  "name": "troopjs-contrib-revealjs",
+  "version": "0.0.0",
+  "homepage": "https://github.com/troopjs/troopjs-contrib-revealjs",
+  "authors": [
+    "Mikael Karon"
+  ],
+  "main": "main.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "troopjs": "~2",
+    "require-css": "~0.1",
+    "reveal.js": "~2.6"
+  },
+  "_release": "0.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.0",
+    "commit": "a0b18686708d8d889066deab6d2d3492d5632b48"
+  },
+  "_source": "git://github.com/troopjs/troopjs-contrib-revealjs.git",
+  "_target": "~0",
+  "_originalSource": "troopjs-contrib-revealjs"
+}

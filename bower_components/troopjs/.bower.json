@@ -1,0 +1,24 @@
+{
+  "name": "troopjs",
+  "version": "2.1.0+d697dae",
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "devDependencies": {
+    "jquery": "~2",
+    "poly": "~0.6",
+    "requirejs": "~2",
+    "when": "~2.6"
+  },
+  "homepage": "https://github.com/troopjs/troopjs",
+  "_release": "2.1.0+d697dae",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.1.0+d697dae",
+    "commit": "d16930c1a99a031bb92218ee03fb1004e7dff49d"
+  },
+  "_source": "git://github.com/troopjs/troopjs.git",
+  "_target": "~2",
+  "_originalSource": "troopjs"
+}
