@@ -46,7 +46,7 @@ require.config({
 		}
 	},
 
-	"deps": [ "require", "jquery", "troopjs" ],
+	"deps": [ "require", "jquery", "troopjs", "css!revealjs/lib/css/zenburn.css" ],
 
 	"callback": function (contextRequire, jQuery) {
 		contextRequire([ "troopjs-browser/application/widget", "troopjs-browser/ajax/service" ], function (Application, AjaxService) {
