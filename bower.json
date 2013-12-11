@@ -1,11 +1,11 @@
 {
-  "name": "troopjs-slides",
+  "name": "troopjs-learn",
   "version": "0.0.1",
-  "homepage": "https://github.com/troopjs/slides",
+  "homepage": "https://github.com/troopjs/learn.troopjs.com",
   "authors": [
     "Mikael Karon"
   ],
-  "description": "Slides for TroopJS",
+  "description": "Learn TroopJS website",
   "main": "index.html",
   "license": "MIT",
   "ignore": [
